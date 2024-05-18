@@ -1,18 +1,15 @@
 import React from "react";
-import { render } from 'react-dom';
-import { ChakraProvider } from "@chakra-ui/core";
+import { createRoot } from "react-dom/client";
+import ContentContainer from "./Components/ContentContainer/ContentContainer";
 
-import Header from "./Components/Header";
-import Todos from "./Components/Todos";
+
 
 function App() {
   return (
-    <ChakraProvider>
-      <Header />
-      <Todos />
-    </ChakraProvider>
-  )
+      <ContentContainer />
+  );
 }
 
-const rootElement = document.getElementById("root")
-render(<App />, rootElement)
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+root.render(<App />);
