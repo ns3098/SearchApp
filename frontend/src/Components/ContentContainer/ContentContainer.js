@@ -8,7 +8,7 @@ import { Button } from "antd";
 import ResponsiveTable from "../ResponsiveTable";
 import { ContentWrapper } from "./StyledComponents";
 import { DROPDOWN_OPTIONS_URL, getTableUrl } from "../../utils/constants";
-import { sendGetRequest } from '../../utils/utils'
+import { sendGetRequest } from "../../utils/utils";
 
 const ContentContainer = () => {
   const [dropdownState, setDropDownState] = useState("");
@@ -30,11 +30,14 @@ const ContentContainer = () => {
   }, [searchResponse]);
 
   useEffect(() => {
-    sendGetRequest(DROPDOWN_OPTIONS_URL, (response) => setDdOptions(
-      response.data?.data.map((item) => {
-        return { label: item, value: item };
-      })
-    ));
+    sendGetRequest(DROPDOWN_OPTIONS_URL, (response) => {
+      setDdOptions(
+        response.data?.data.map((item) => {
+          return { label: item, value: item };
+        })
+      );
+      setDropDownState(ddOptions[0].label)
+    });
   }, []);
 
   useDebouncedEffect(
@@ -124,14 +127,20 @@ const ContentContainer = () => {
           size="large"
           styles="background-color:red;"
           icon={<SearchOutlined />}
-          onClick={() => sendGetRequest(getTableUrl(), (response) => setTableData(response.data?.data))}
+          onClick={() =>
+            sendGetRequest(getTableUrl(), (response) =>
+              setTableData(response.data?.data)
+            )
+          }
         >
           Search
         </Button>
       </div>
-      {tableData && <div className="responsive-table">
-        <ResponsiveTable tableData={tableData}/>
-      </div>}
+      {tableData && (
+        <div className="responsive-table">
+          <ResponsiveTable tableData={tableData} />
+        </div>
+      )}
     </ContentWrapper>
   );
 };
