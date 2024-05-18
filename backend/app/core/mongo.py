@@ -1,21 +1,19 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.errors import ConnectionFailure
 
-from app.core.constants import MONGO_URI, DB_NAME
+from app.main import app
 
 
 class Mongo:
-    def __init__(self, connection_string=MONGO_URI, db_name=DB_NAME):
+    def __init__(self):
         """
         Initialize the Mongo utility class.
         
         :param connection_string: MongoDB connection string. If None, environment variables are used.
         :param db_name: Name of the database to connect to.
         """
-        print(DB_NAME)
-        self.client = MongoClient(connection_string)
-        self.db_name = db_name
-        self.db = self.client[db_name]
+        self.client = app.mongodb_client
+        self.db = app.mongodb
 
     def list_collections(self):
         """
