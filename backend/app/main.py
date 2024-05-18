@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
+from mongoengine import disconnect, connect, DEFAULT_CONNECTION_NAME
 
 from app.core.config import settings
 from app.core.constants import MONGO_URI, DB_NAME
@@ -17,13 +17,12 @@ async def lifespan(app: FastAPI):
 
 # method for start the MongoDb Connection
 async def startup_db_client(app):
-    app.mongodb_client = AsyncIOMotorClient(MONGO_URI)
-    app.mongodb = app.mongodb_client.get_database(DB_NAME)
+    connect(DB_NAME, host=MONGO_URI)
     print("MongoDB connected.")
 
 # method to close the database connection
 async def shutdown_db_client(app):
-    app.mongodb_client.close()
+    disconnect(alias=DEFAULT_CONNECTION_NAME)
     print("Database disconnected.")
 
 
@@ -35,6 +34,7 @@ def create_application() -> FastAPI:
     """
 
     application = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
+    # connect(alias="async_db", host=MONGO_URI)
 
     application.add_middleware(
         CORSMiddleware,
