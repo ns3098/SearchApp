@@ -1,3 +1,5 @@
-export const DROPDOWN_OPTIONS_URL = 'https://7a7c-2405-201-4039-20b2-b0b5-7a9c-e6de-3d0b.ngrok-free.app/api/v1/get_assembly';
+export const DROPDOWN_OPTIONS_URL = 'http://127.0.0.1:8000/api/v1/get_assembly';
 
-export const getTableUrl = ( ) => `https://7a7c-2405-201-4039-20b2-b0b5-7a9c-e6de-3d0b.ngrok-free.app/api/v1/fetch_name_details/?assembly=Thane&text=raja&page=3&page_size=10`;
+export const getEpicTableUrl = ( assembly, text, page, page_size) => `http://localhost:8000/api/v1/fetch_epic_details/?assembly=${assembly}&text=${text}&page=${page}&page_size=${page_size}`;
+
+export const getNameTableUrl = ( assembly, text, page, page_size) => `http://localhost:8000/api/v1/fetch_name_details/?assembly=${assembly}&text=${text}&page=${page}&page_size=${page_size}`;

@@ -7,13 +7,14 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import ResponsiveTable from "../ResponsiveTable";
 import { ContentWrapper } from "./StyledComponents";
-import { DROPDOWN_OPTIONS_URL, getTableUrl } from "../../utils/constants";
+import { DROPDOWN_OPTIONS_URL, getNameTableUrl, getEpicTableUrl } from "../../utils/constants";
 import { sendGetRequest } from "../../utils/utils";
 
 const ContentContainer = () => {
   const [dropdownState, setDropDownState] = useState("");
   const [ddOptions, setDdOptions] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [searchText1, setSearchText1] = useState("");
   const [showSearchList, setShowSearchList] = useState(false);
   const [searchResult, setSearchResult] = useState(undefined);
   const [tableData, setTableData] = useState(undefined);
@@ -31,12 +32,13 @@ const ContentContainer = () => {
 
   useEffect(() => {
     sendGetRequest(DROPDOWN_OPTIONS_URL, (response) => {
+      const r = response.data?.data[0];
       setDdOptions(
         response.data?.data.map((item) => {
           return { label: item, value: item };
         })
       );
-      setDropDownState(ddOptions[0].label)
+      setDropDownState(r);
     });
   }, []);
 
@@ -70,6 +72,19 @@ const ContentContainer = () => {
     }));
   }, [searchResult]);
 
+  const getSearchResultOnClick = () => {
+    if (searchText.length > 0){
+      sendGetRequest(getEpicTableUrl(dropdownState, searchText, 1, 10), (response) =>
+              setTableData(response.data?.data)
+            )
+    }
+    else if (searchText1.length > 0){
+      sendGetRequest(getNameTableUrl(dropdownState, searchText1, 1, 10), (response) =>
+              setTableData(response.data?.data)
+            )
+    }
+  };
+
   const updateShowSearchList = useCallback(() => {
     if (searchText.length > 4) setShowSearchList(true);
   }, [searchText]);
@@ -95,7 +110,7 @@ const ContentContainer = () => {
             searchText={searchText}
             setSearchText={setSearchText}
             onMenuItemClick={() => {}}
-            placeholder="Search 1"
+            placeholder="Enter EPIC ID"
             emptyStateMessage="No results found"
             emptyStateHeight="14rem"
             overlayStyle={{
@@ -110,10 +125,10 @@ const ContentContainer = () => {
             setVisible={updateShowSearchList}
             options={dropdownOptions}
             loading={searchingCampaigns}
-            searchText={searchText}
-            setSearchText={setSearchText}
+            searchText={searchText1}
+            setSearchText={setSearchText1}
             onMenuItemClick={() => {}}
-            placeholder="Search 1"
+            placeholder="Enter Name"
             emptyStateMessage="No results found"
             emptyStateHeight="14rem"
             overlayStyle={{
@@ -128,9 +143,7 @@ const ContentContainer = () => {
           styles="background-color:red;"
           icon={<SearchOutlined />}
           onClick={() =>
-            sendGetRequest(getTableUrl(), (response) =>
-              setTableData(response.data?.data)
-            )
+            getSearchResultOnClick()
           }
         >
           Search
