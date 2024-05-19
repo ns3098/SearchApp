@@ -36,16 +36,16 @@ const ContentContainer = () => {
   const [pageSize, setPageSize] = useState(25);
   const showTotal = (totalPages) => `Total ${totalPages} records`;
 
-  const [
-    getSearchResult,
-    { response: searchResponse, loading: searchingCampaigns },
-  ] = useGetRequest("campaigns/searchV2", false);
+  // const [
+  //   getSearchResult,
+  //   { response: searchResponse, loading: searchingCampaigns },
+  // ] = useGetRequest("campaigns/searchV2", false);
 
-  useEffect(() => {
-    if (searchResponse?.searchCampaign) {
-      setSearchEpidIdResult(searchResponse.searchCampaign);
-    }
-  }, [searchResponse]);
+  // useEffect(() => {
+  //   if (searchResponse?.searchCampaign) {
+  //     setSearchEpidIdResult(searchResponse.searchCampaign);
+  //   }
+  // }, [searchResponse]);
 
   useEffect(() => {
     sendGetRequest(DROPDOWN_OPTIONS_URL, (response) => {
@@ -59,37 +59,37 @@ const ContentContainer = () => {
     });
   }, []);
 
-  useDebouncedEffect(
-    () => {
-      if (searchEpidIdText.length > 4) {
-        getSearchResult({
-          params: {
-            name: encodeURIComponent(searchEpidIdText.toLowerCase()),
-          },
-        });
-      }
-    },
-    [searchEpidIdText],
-    500
-  );
+  // useDebouncedEffect(
+  //   () => {
+  //     if (searchEpidIdText.length > 4) {
+  //       getSearchResult({
+  //         params: {
+  //           name: encodeURIComponent(searchEpidIdText.toLowerCase()),
+  //         },
+  //       });
+  //     }
+  //   },
+  //   [searchEpidIdText],
+  //   500
+  // );
 
-  useEffect(() => {
-    if (searchEpidIdText.length > 4) {
-      setShowEpicIdSearchList(true);
-    } else {
-      setShowEpicIdSearchList(false);
-      setSearchEpidIdResult(undefined);
-    }
-  }, [searchEpidIdText]);
+  // useEffect(() => {
+  //   if (searchEpidIdText.length > 4) {
+  //     setShowEpicIdSearchList(true);
+  //   } else {
+  //     setShowEpicIdSearchList(false);
+  //     setSearchEpidIdResult(undefined);
+  //   }
+  // }, [searchEpidIdText]);
 
-  useEffect(() => {
-    if (searchEpidIdText.length > 4) {
-      setShowNameSearchList(true);
-    } else {
-      setShowNameSearchList(false);
-      setSearchNameResult(undefined);
-    }
-  }, [searchEpidIdText]);
+  // useEffect(() => {
+  //   if (searchEpidIdText.length > 4) {
+  //     setShowNameSearchList(true);
+  //   } else {
+  //     setShowNameSearchList(false);
+  //     setSearchNameResult(undefined);
+  //   }
+  // }, [searchEpidIdText]);
 
   const dropdownOptions = useMemo(() => {
     return searchEpicIdResult?.map((searchedCamp) => ({
@@ -124,22 +124,22 @@ const ContentContainer = () => {
     setCurrentPage(page);
     setPageSize(pgSize);
     sendGetRequest(
-      getEpicTableUrl(dropdownState, searchEpidIdText, currentPage, pageSize),
+      getEpicTableUrl(dropdownState, searchEpidIdText, page, pgSize),
       (response) => setTableData(response.data?.data)
     );
   };
 
-  const updateShowEpicIdSearchList = useCallback(() => {
-    if (searchEpidIdText.length > 4) setShowEpicIdSearchList(true);
-  }, [searchEpidIdText]);
-  const updateShowNameSearchList = useCallback(() => {
-    if (searchNameText.length > 4) setShowNameSearchList(true);
-  }, [searchNameText]);
+  // const updateShowEpicIdSearchList = useCallback(() => {
+  //   if (searchEpidIdText.length > 4) setShowEpicIdSearchList(true);
+  // }, [searchEpidIdText]);
+  // const updateShowNameSearchList = useCallback(() => {
+  //   if (searchNameText.length > 4) setShowNameSearchList(true);
+  // }, [searchNameText]);
 
   return (
     <ContentWrapper>
       <div className="title">
-        <h1>Search App</h1>
+        <h1>Voter Search</h1>
       </div>
       <div className="controls-container">
         <StyledSelect
@@ -152,9 +152,9 @@ const ContentContainer = () => {
         <div className="search-dropdown-wrapper">
           <DropdownServerSearch
             visible={showEpidIdSearchList}
-            setVisible={updateShowEpicIdSearchList}
+            setVisible={() => true}
             options={dropdownOptions}
-            loading={searchingCampaigns}
+            loading={false}
             searchText={searchEpidIdText}
             setSearchText={setSearchEpicIdText}
             onMenuItemClick={() => {}}
@@ -170,9 +170,9 @@ const ContentContainer = () => {
         <div className="search-dropdown-wrapper">
           <DropdownServerSearch
             visible={showNameSearchList}
-            setVisible={updateShowNameSearchList}
+            setVisible={() => true}
             options={dropdownOptions}
-            loading={searchingCampaigns}
+            loading={false}
             searchText={searchNameText}
             setSearchText={setSearchNameText}
             onMenuItemClick={(cal) => {}}
