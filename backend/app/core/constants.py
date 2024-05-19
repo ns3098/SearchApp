@@ -24,3 +24,9 @@ ASSEMBLY_TO_COLLECTION_FACTORY = {
 
 FIELDS = ['voter_id', 'voter_name_eng', 'voter_name_hin', 'relative_name_eng', 'relative_name_hin', 'assembly_constituency', 'booth_number', 'polling_station_eng', 'polling_station_hin', 'serial_number']
 FRONTEND_FIELDS = []
+
+HEADERS = {
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": 'POST, GET, DELETE, OPTIONS',
+        "Access-Control-Allow-Headers": 'Authorization, Content-Type'
+    }
