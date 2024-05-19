@@ -7,8 +7,13 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import ResponsiveTable from "../ResponsiveTable";
 import { ContentWrapper } from "./StyledComponents";
-import { DROPDOWN_OPTIONS_URL, getNameTableUrl, getEpicTableUrl } from "../../utils/constants";
+import {
+  DROPDOWN_OPTIONS_URL,
+  getNameTableUrl,
+  getEpicTableUrl,
+} from "../../utils/constants";
 import { sendGetRequest } from "../../utils/utils";
+import { Pagination } from "antd";
 
 const ContentContainer = () => {
   const [dropdownState, setDropDownState] = useState("");
@@ -18,6 +23,10 @@ const ContentContainer = () => {
   const [showSearchList, setShowSearchList] = useState(false);
   const [searchResult, setSearchResult] = useState(undefined);
   const [tableData, setTableData] = useState(undefined);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(15);
+  const [pageSize, setPageSize] = useState(5);
 
   const [
     getSearchResult,
@@ -73,16 +82,26 @@ const ContentContainer = () => {
   }, [searchResult]);
 
   const getSearchResultOnClick = () => {
-    if (searchText.length > 0){
-      sendGetRequest(getEpicTableUrl(dropdownState, searchText, 1, 10), (response) =>
-              setTableData(response.data?.data)
-            )
-    }
-    else if (searchText1.length > 0){
-      sendGetRequest(getNameTableUrl(dropdownState, searchText1, 1, 10), (response) =>
-              setTableData(response.data?.data)
-            )
-    }
+    sendGetRequest(
+      "https://searchapp-kyye.onrender.com/api/v1/fetch_epic_details/?assembly=Thane&text=xce&page=3&page_size=10",
+      (response) => setTableData(response.data?.data)
+    );
+    // if (searchText.length > 0) {
+    //   sendGetRequest(
+    //     getEpicTableUrl(dropdownState, searchText, currentPage, pageSize),
+    //     (response) => setTableData(response.data?.data)
+    //   );
+    // } else if (searchText1.length > 0) {
+    //   sendGetRequest(
+    //     getNameTableUrl(dropdownState, searchText1, currentPage, pageSize),
+    //     (response) => setTableData(response.data?.data)
+    //   );
+    // }
+  };
+
+  const onPaginationChange = (page, pgSize) => {
+    setCurrentPage(page);
+    setPageSize(pgSize);
   };
 
   const updateShowSearchList = useCallback(() => {
@@ -142,17 +161,27 @@ const ContentContainer = () => {
           size="large"
           styles="background-color:red;"
           icon={<SearchOutlined />}
-          onClick={() =>
-            getSearchResultOnClick()
-          }
+          onClick={() => getSearchResultOnClick()}
         >
           Search
         </Button>
       </div>
       {tableData && (
-        <div className="responsive-table">
-          <ResponsiveTable tableData={tableData} />
-        </div>
+        <>
+          <div className="responsive-table">
+            <ResponsiveTable tableData={tableData} />
+          </div>
+          <Pagination
+            style={{ margin: "10px auto 30px auto" }}
+            current={currentPage}
+            defaultCurrent={currentPage}
+            total={totalPages}
+            pageSize={pageSize}
+            pageSizeOptions={[15, 30, 40]}
+            onChange={onPaginationChange}
+            onShowSizeChange={onPaginationChange}
+          />
+        </>
       )}
     </ContentWrapper>
   );
