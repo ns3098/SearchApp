@@ -11,6 +11,8 @@ import {
   DROPDOWN_OPTIONS_URL,
   getNameTableUrl,
   getEpicTableUrl,
+  getTotalPagesEpicUrl,
+  getTotalPagesNameUrl,
 } from "../../utils/constants";
 import { sendGetRequest } from "../../utils/utils";
 import { Pagination } from "antd";
@@ -18,15 +20,21 @@ import { Pagination } from "antd";
 const ContentContainer = () => {
   const [dropdownState, setDropDownState] = useState("");
   const [ddOptions, setDdOptions] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [searchText1, setSearchText1] = useState("");
-  const [showSearchList, setShowSearchList] = useState(false);
-  const [searchResult, setSearchResult] = useState(undefined);
+
+  const [searchEpidIdText, setSearchEpicIdText] = useState("");
+  const [showEpidIdSearchList, setShowEpicIdSearchList] = useState(false);
+  const [searchEpicIdResult, setSearchEpidIdResult] = useState(undefined);
+
+  const [searchNameText, setSearchNameText] = useState("");
+  const [showNameSearchList, setShowNameSearchList] = useState(false);
+  const [searchNameResult, setSearchNameResult] = useState(undefined);
+
   const [tableData, setTableData] = useState(undefined);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(15);
-  const [pageSize, setPageSize] = useState(5);
+  const [totalPages, setTotalPages] = useState(25);
+  const [pageSize, setPageSize] = useState(25);
+  const showTotal = (totalPages) => `Total ${totalPages} records`;
 
   const [
     getSearchResult,
@@ -35,7 +43,7 @@ const ContentContainer = () => {
 
   useEffect(() => {
     if (searchResponse?.searchCampaign) {
-      setSearchResult(searchResponse.searchCampaign);
+      setSearchEpidIdResult(searchResponse.searchCampaign);
     }
   }, [searchResponse]);
 
@@ -53,60 +61,81 @@ const ContentContainer = () => {
 
   useDebouncedEffect(
     () => {
-      if (searchText.length > 2) {
+      if (searchEpidIdText.length > 4) {
         getSearchResult({
           params: {
-            name: encodeURIComponent(searchText.toLowerCase()),
+            name: encodeURIComponent(searchEpidIdText.toLowerCase()),
           },
         });
       }
     },
-    [searchText],
+    [searchEpidIdText],
     500
   );
 
   useEffect(() => {
-    if (searchText.length > 4) {
-      setShowSearchList(true);
+    if (searchEpidIdText.length > 4) {
+      setShowEpicIdSearchList(true);
     } else {
-      setShowSearchList(false);
-      setSearchResult(undefined);
+      setShowEpicIdSearchList(false);
+      setSearchEpidIdResult(undefined);
     }
-  }, [searchText]);
+  }, [searchEpidIdText]);
+
+  useEffect(() => {
+    if (searchEpidIdText.length > 4) {
+      setShowNameSearchList(true);
+    } else {
+      setShowNameSearchList(false);
+      setSearchNameResult(undefined);
+    }
+  }, [searchEpidIdText]);
 
   const dropdownOptions = useMemo(() => {
-    return searchResult?.map((searchedCamp) => ({
+    return searchEpicIdResult?.map((searchedCamp) => ({
       label: <div className="search-result"></div>,
       key: searchedCamp.id,
     }));
-  }, [searchResult]);
+  }, [searchEpicIdResult]);
 
   const getSearchResultOnClick = () => {
-    sendGetRequest(
-      "https://searchapp-kyye.onrender.com/api/v1/fetch_epic_details/?assembly=Thane&text=xce&page=3&page_size=10",
-      (response) => setTableData(response.data?.data)
-    );
-    // if (searchText.length > 0) {
-    //   sendGetRequest(
-    //     getEpicTableUrl(dropdownState, searchText, currentPage, pageSize),
-    //     (response) => setTableData(response.data?.data)
-    //   );
-    // } else if (searchText1.length > 0) {
-    //   sendGetRequest(
-    //     getNameTableUrl(dropdownState, searchText1, currentPage, pageSize),
-    //     (response) => setTableData(response.data?.data)
-    //   );
-    // }
+    if (searchEpidIdText.length > 0) {
+      sendGetRequest(
+        getEpicTableUrl(dropdownState, searchEpidIdText, currentPage, pageSize),
+        (response) => setTableData(response.data?.data)
+      );
+      sendGetRequest(
+        getTotalPagesEpicUrl(dropdownState, searchEpidIdText),
+        (response) => setTotalPages(response.data?.data)
+      );
+    } else if (searchNameText.length > 0) {
+      sendGetRequest(
+        getNameTableUrl(dropdownState, searchNameText, currentPage, pageSize),
+        (response) => setTableData(response.data?.data)
+      );
+      sendGetRequest(
+        getTotalPagesNameUrl(dropdownState, searchEpidIdText),
+        (response) => setTotalPages(response.data?.data)
+      );
+    }
   };
 
   const onPaginationChange = (page, pgSize) => {
     setCurrentPage(page);
     setPageSize(pgSize);
+    sendGetRequest(
+      getEpicTableUrl(dropdownState, searchEpidIdText, currentPage, pageSize),
+      (response) => setTableData(response.data?.data)
+    );
   };
 
-  const updateShowSearchList = useCallback(() => {
-    if (searchText.length > 4) setShowSearchList(true);
-  }, [searchText]);
+  const updateShowEpicIdSearchList = useCallback(() => {
+    if (searchEpidIdText.length > 4) setShowEpicIdSearchList(true);
+  }, [searchEpidIdText]);
+  const updateShowNameSearchList = useCallback(() => {
+    if (searchNameText.length > 4) setShowNameSearchList(true);
+  }, [searchNameText]);
+
   return (
     <ContentWrapper>
       <div className="title">
@@ -122,12 +151,12 @@ const ContentContainer = () => {
         />
         <div className="search-dropdown-wrapper">
           <DropdownServerSearch
-            visible={showSearchList}
-            setVisible={updateShowSearchList}
+            visible={showEpidIdSearchList}
+            setVisible={updateShowEpicIdSearchList}
             options={dropdownOptions}
             loading={searchingCampaigns}
-            searchText={searchText}
-            setSearchText={setSearchText}
+            searchText={searchEpidIdText}
+            setSearchText={setSearchEpicIdText}
             onMenuItemClick={() => {}}
             placeholder="Enter EPIC ID"
             emptyStateMessage="No results found"
@@ -140,13 +169,13 @@ const ContentContainer = () => {
         </div>
         <div className="search-dropdown-wrapper">
           <DropdownServerSearch
-            visible={showSearchList}
-            setVisible={updateShowSearchList}
+            visible={showNameSearchList}
+            setVisible={updateShowNameSearchList}
             options={dropdownOptions}
             loading={searchingCampaigns}
-            searchText={searchText1}
-            setSearchText={setSearchText1}
-            onMenuItemClick={() => {}}
+            searchText={searchNameText}
+            setSearchText={setSearchNameText}
+            onMenuItemClick={(cal) => {}}
             placeholder="Enter Name"
             emptyStateMessage="No results found"
             emptyStateHeight="14rem"
@@ -177,9 +206,10 @@ const ContentContainer = () => {
             defaultCurrent={currentPage}
             total={totalPages}
             pageSize={pageSize}
-            pageSizeOptions={[15, 30, 40]}
+            pageSizeOptions={[25, 50, 75, 100]}
             onChange={onPaginationChange}
             onShowSizeChange={onPaginationChange}
+            showTotal={showTotal}
           />
         </>
       )}
