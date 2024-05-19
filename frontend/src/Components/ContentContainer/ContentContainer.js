@@ -137,11 +137,20 @@ const ContentContainer = () => {
   const onPaginationChange = (page, pgSize) => {
     setCurrentPage(page);
     setPageSize(pgSize);
-    sendGetRequest(
-      getEpicTableUrl(dropdownState, searchEpidIdText, page, pgSize),
-      (response) => setTableData(response.data?.data),
-      setLoading
-    );
+    if (searchEpidIdText.length > 0) {
+      sendGetRequest(
+        getEpicTableUrl(dropdownState, searchEpidIdText, page, pgSize),
+        (response) => setTableData(response.data?.data),
+        setLoading
+      );
+    }
+    else if (searchNameText.length > 0) {
+      sendGetRequest(
+        getNameTableUrl(dropdownState, searchNameText, page, pgSize),
+        (response) => setTableData(response.data?.data),
+        setLoading
+      );
+    }
   };
 
   // const updateShowEpicIdSearchList = useCallback(() => {
