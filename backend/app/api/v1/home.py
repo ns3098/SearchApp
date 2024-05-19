@@ -38,7 +38,7 @@ async def home(assembly: str, text: str, page: Optional[int] = 1, page_size: Opt
         raise HTTPException(status_code=400, detail=f"Bad Request: Invalid assembly name {assembly}") 
     query = Q(voter_id__startswith=text)
     skip_value = (page - 1) * page_size
-    voter_info = ASSEMBLY_TO_COLLECTION_FACTORY.get(assembly_collection).objects(query).exclude("id").skip(skip_value).limit(page_size).as_pymongo().batch_size(10000).values_list('voter_id')
+    voter_info = ASSEMBLY_TO_COLLECTION_FACTORY.get(assembly_collection).objects(query).skip(skip_value).limit(page_size).as_pymongo().batch_size(10000).values_list('voter_id')
     voters_info = [x['Voter ID'] for x in voter_info]
     return JSONResponse(content={"data": voters_info}, headers=HEADERS)
 
@@ -50,7 +50,7 @@ async def home(assembly: str, text: str, page: Optional[int] = 1, page_size: Opt
         raise HTTPException(status_code=400, detail=f"Bad Request: Invalid assembly name {assembly}") 
     query = Q(voter_name_eng__startswith=text)
     skip_value = (page - 1) * page_size
-    voter_info = ASSEMBLY_TO_COLLECTION_FACTORY.get(assembly_collection).objects(query).exclude("id").skip(skip_value).limit(page_size).as_pymongo().batch_size(10000).values_list('voter_name_eng')
+    voter_info = ASSEMBLY_TO_COLLECTION_FACTORY.get(assembly_collection).objects(query).skip(skip_value).limit(page_size).as_pymongo().batch_size(10000).values_list('voter_name_eng')
     voters_info = [x['Voter Name Eng'] for x in voter_info]
     return JSONResponse(content={"data": voters_info}, headers=HEADERS)
 
