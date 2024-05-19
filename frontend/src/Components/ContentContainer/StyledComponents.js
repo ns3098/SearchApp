@@ -16,18 +16,6 @@ export const ContentWrapper = styled.div`
     padding: 40 0;
   }
 
-  table,
-  th,
-  td {
-    border: 1px solid black;
-    border-collapse: collapse;
-    border-radius: 4px;
-    padding: 10px;
-  }
-  thead {
-    background-color: #dbdde0;
-  }
-
   .controls-container {
     display: flex;
     width: 100%;

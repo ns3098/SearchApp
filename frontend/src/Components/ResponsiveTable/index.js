@@ -1,33 +1,32 @@
 import React, { useEffect, useState } from "react";
+import { TableWrapper } from "./StyledComponents";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 
 export default function ResponsiveTable({ tableData }) {
   const [headers, setHeaders] = useState([]);
-  const [rows, setRows] = useState([]);
   console.log(tableData);
   useEffect(() => {
-    console.log(Object.keys(tableData[0]), "uoo");
     setHeaders(Object.keys(tableData[0]));
   }, []);
   return (
-    <Table>
-      <Thead>
-        <Tr>
+    <TableWrapper>
+      <thead>
+        <tr>
           {headers.map((header) => (
-            <Th>{header}</Th>
+            <th className="desktop">{header}</th>
           ))}
-        </Tr>
-      </Thead>
-      <Tbody>
-        {tableData.map((row, rowIndex) => (
-          <Tr>
+        </tr>
+      </thead>
+      <tbody>
+      {tableData.map((row, rowIndex) => (
+          <tr>
             {headers.map((header) => (
-              <Td>{row[header]}</Td>
+              <td className="mobile-flex" data-header={header}>{row[header]}</td>
             ))}
-          </Tr>
+          </tr>
         ))}
-      </Tbody>
-    </Table>
+      </tbody>
+    </TableWrapper>
   );
 }
