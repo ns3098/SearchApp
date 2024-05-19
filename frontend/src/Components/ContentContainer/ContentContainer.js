@@ -114,7 +114,7 @@ const ContentContainer = () => {
         (response) => setTableData(response.data?.data)
       );
       sendGetRequest(
-        getTotalPagesNameUrl(dropdownState, searchEpidIdText),
+        getTotalPagesNameUrl(dropdownState, searchNameText),
         (response) => setTotalPages(response.data?.data)
       );
     }
