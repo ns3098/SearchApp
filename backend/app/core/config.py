@@ -12,8 +12,9 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = os.environ.get('PROJECT_NAME')
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
         "http://localhost",
-        "http://localhost:3000",  # Example frontend port
-        "http://localhost:3001"   # Port 3001
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "https://voter-search.onrender.com"
     ]
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
