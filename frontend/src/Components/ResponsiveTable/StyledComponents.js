@@ -10,7 +10,7 @@ export const TableWrapper = styled.table`
     padding: 10px;
   }
   thead {
-    background-color: #dbdde0;
+    background-color: #d7f0fc;
   }
   @media (max-width: 640px) {
     /* display th for desktop only, hide on mobile */

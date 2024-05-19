@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import request from '../request';
+import axios from "axios";
 
 /**
  * @typedef {{params?, onSuccess?, onError?, newUrl?, timeout?}} GetParams
@@ -30,14 +30,9 @@ export const useGetRequest = (url, callOnMount = true, initialParams = {}) => {
     ) => {
       setLoading(true);
       try {
-        const response = await request({
-          method: 'GET',
-          url: newUrl || url,
-          params: params || initialParamsRef.current || {},
-          timeout,
-        });
-
-        setResponse(response);
+        const r = await axios.get(url);
+        console.log(r, "yoo")
+        setResponse(r);
         if (onSuccess) onSuccess(response);
         setLoading(false);
       } catch (err) {
@@ -47,7 +42,7 @@ export const useGetRequest = (url, callOnMount = true, initialParams = {}) => {
         setLoading(false);
       }
     },
-    [url]
+    [response, url]
   );
 
   useEffect(() => {

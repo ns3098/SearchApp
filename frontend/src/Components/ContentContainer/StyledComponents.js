@@ -16,17 +16,19 @@ export const ContentWrapper = styled.div`
     justify-content: center;
     padding: 10px 0;
     color: #fff;
-    color: #654ea3; /* fallback for old browsers */
-    color: -webkit-linear-gradient(
+    background: #36d1dc; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
       to right,
-      #eaafc8,
-      #654ea3
+      #5b86e5,
+      #36d1dc
     ); /* Chrome 10-25, Safari 5.1-6 */
-    color: linear-gradient(
+    background: linear-gradient(
       to right,
-      #eaafc8,
-      #654ea3
+      #5b86e5,
+      #36d1dc
     ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-radius: 8px;
   }
 
   .controls-container {
@@ -46,6 +48,19 @@ export const ContentWrapper = styled.div`
 
   .search-dropdown-wrapper {
     width: 30%;
+  }
+
+  .content-loader {
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    align-items: center;
+  }
+
+  .pagination-loader {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
   }
 
   @media screen and (max-width: 640px) {

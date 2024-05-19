@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { TableWrapper } from "./StyledComponents";
-import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
-import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 
 export default function ResponsiveTable({ tableData }) {
   const [headers, setHeaders] = useState([]);
@@ -13,16 +11,16 @@ export default function ResponsiveTable({ tableData }) {
     <TableWrapper>
       <thead>
         <tr>
-          {headers.map((header) => (
-            <th className="desktop">{header}</th>
+          {headers.map((header, index) => (
+            <th className="desktop" key={`header${index}`}>{header}</th>
           ))}
         </tr>
       </thead>
       <tbody>
       {tableData.map((row, rowIndex) => (
-          <tr>
-            {headers.map((header) => (
-              <td className="mobile-flex" data-header={header}>{row[header]}</td>
+          <tr key={`table_row${rowIndex}`}>
+            {headers.map((header, index) => (
+              <td key={`table_data${rowIndex}${index}`} className="mobile-flex" data-header={header}>{row[header]}</td>
             ))}
           </tr>
         ))}
